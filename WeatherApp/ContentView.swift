@@ -5,9 +5,12 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var isNight: Bool = false
+    var weekDays : [String] = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"]
+    
     var body: some View {
         ZStack {
-            ukanafoni(topColor: .mint, botColor: .blue)
+            ukanafoni(isNight: $isNight)
             VStack {
             CityView(CityName: "Georgia, Tbilisi")
 
@@ -17,18 +20,16 @@ struct ContentView: View {
                 .padding(.bottom, 60)
 
                 HStack(spacing: 13) {
-                    WeatherDayView(dayOfWeek: "TUE", imageName: "cloud.moon.rain.fill", temperature: 6)
-                    WeatherDayView(dayOfWeek: "WED", imageName: "cloud.bolt.fill", temperature: 8)
-                    WeatherDayView(dayOfWeek: "THU", imageName: "cloud.sun.fill", temperature: 15)
-                    WeatherDayView(dayOfWeek: "FRI", imageName: "cloud.sun.bolt.fill", temperature: 11)
-                    WeatherDayView(dayOfWeek: "SAT", imageName: "cloud.moon.fill", temperature: 10)
+                    ForEach( 0..<5){ day in
+                        WeatherDayView(dayOfWeek: weekDays[day], imageName: "cloud.moon.fill", temperature: 10)
+                    }
+               
                 }
 
                 Spacer()
 
                 Button(action: {
-                    // Replace with the actual action you want to perform
-                    print("Button tapped")
+                    isNight.toggle()
                 }) {
                     Text("Flip the day")
                         .foregroundColor(.teal)
@@ -79,13 +80,12 @@ struct WeatherDayView: View {
 }
 
 struct ukanafoni: View {
-    
-    var topColor: Color
-    var botColor : Color
+   
+    @Binding var isNight : Bool
     
     var body: some View {
         
-        LinearGradient(gradient: Gradient(colors: [topColor, .blusha, botColor]),
+        LinearGradient(gradient: Gradient(colors: [isNight ? .black : .blue, isNight ? .gray : .white]),
             startPoint: .top,
             endPoint: .bottom)
             .edgesIgnoringSafeArea(.all)
